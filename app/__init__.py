@@ -2,9 +2,7 @@ from flask import Flask, render_template
 from config import Config
 from flask_bootstrap import Bootstrap
 
-
-app = Flask('app')
-app.config.from_object(Config)
+concise
 bootstrap = Bootstrap(app)
 
 @app.route('/')

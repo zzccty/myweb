@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" type="text/css">
     {% endblock %}
 
-    <title>Your page title</title>
+    <title>{% block title %}Your page title{% endblock title %}</title>
     {% endblock %}
   </head>
   <body>
