@@ -11,6 +11,10 @@ flask = "*"
 python-dotenv = "*"
 flask-login = "*"
 flask-sqlalchemy = "*"
+flask-ckeditor = "*"
+flask-migrate = "*"
+markdown = "*"
+bleach = "*"
 
 [requires]
 python_version = "3.6"
