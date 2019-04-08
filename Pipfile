@@ -15,6 +15,7 @@ flask-ckeditor = "*"
 flask-migrate = "*"
 markdown = "*"
 bleach = "*"
+flask-wtf = "*"
 
 [requires]
 python_version = "3.6"

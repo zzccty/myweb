@@ -10,7 +10,7 @@ from config import config
 
 db = SQLAlchemy()
 bootstrap = Bootstrap()
-loginmanager = LoginManager()
+login_manager = LoginManager()
 
 
 def create_app(config_name):
@@ -18,7 +18,7 @@ def create_app(config_name):
     app.config.from_object(config[config_name])
     
     db.init_app(app)
-    loginmanager.init_app(app)
+    login_manager.init_app(app)
     bootstrap.init_app(app)
 
     from .main import main as main_blueprint
