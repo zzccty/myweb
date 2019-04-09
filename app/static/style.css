@@ -1,5 +1,41 @@
+body {
+    background-color:#f4f5f5
+}
+
 .container {
-    background-color: brown;
-    height: 400px;
-    color: aqua
+    background-color:#fff;
+    height: 2000px;
+    color: aqua;
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.navbar {
+    padding: 0 1rem;
+}
+
+
+.container-fluid {
+    background-color: #f4f5f5;
+    height: 1500px;
+}
+
+.dividing_line {
+    background-color: #f4f5f5;
+    height: 15px;
+}
+
+.page-attr {
+    background-color: #fff;
+    height: 1000px;
+}
+
+.col-md-9 {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.col-12 {
+    padding-left: 0px;
+    padding-right: 0px;
 }

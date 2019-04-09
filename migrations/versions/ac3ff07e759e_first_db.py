@@ -1,8 +1,8 @@
-"""First version database
+"""First db
 
-Revision ID: 2f21f9f1f2e3
+Revision ID: ac3ff07e759e
 Revises: 
-Create Date: 2019-04-08 14:27:33.201364
+Create Date: 2019-04-09 10:04:56.120095
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2f21f9f1f2e3'
+revision = 'ac3ff07e759e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,15 +23,26 @@ def upgrade():
     sa.Column('category_name', sa.String(length=64), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('category_by_date',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('date', sa.String(), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('link',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=30), nullable=True),
+    sa.Column('url', sa.String(length=255), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('tags',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('tab_name', sa.String(length=64), nullable=True),
+    sa.Column('tag_name', sa.String(length=16), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('email', sa.String(length=64), nullable=True),
-    sa.Column('username', sa.String(length=64), nullable=True),
+    sa.Column('username', sa.String(length=16), nullable=True),
     sa.Column('password_hash', sa.String(length=128), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
@@ -39,13 +50,15 @@ def upgrade():
     op.create_index(op.f('ix_users_username'), 'users', ['username'], unique=True)
     op.create_table('posts',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('title', sa.String(length=255), nullable=True),
+    sa.Column('title', sa.String(length=64), nullable=True),
     sa.Column('body', sa.Text(), nullable=True),
     sa.Column('timestamp', sa.DateTime(), nullable=True),
     sa.Column('author_id', sa.Integer(), nullable=True),
     sa.Column('category_id', sa.Integer(), nullable=True),
+    sa.Column('category_by_date_id', sa.Integer(), nullable=True),
     sa.Column('reading_volume', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['author_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['category_by_date_id'], ['category_by_date.id'], ),
     sa.ForeignKeyConstraint(['category_id'], ['categories.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -69,5 +82,7 @@ def downgrade():
     op.drop_index(op.f('ix_users_email'), table_name='users')
     op.drop_table('users')
     op.drop_table('tags')
+    op.drop_table('link')
+    op.drop_table('category_by_date')
     op.drop_table('categories')
     # ### end Alembic commands ###

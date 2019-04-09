@@ -12,16 +12,33 @@
     <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" type="text/css">
     {% endblock %}
 
-    <title>{% block title %}Your page title{% endblock title %}</title>
+    <title>{% block title %}Welcome to CodePool{% endblock title %}</title>
     {% endblock %}
   </head>
   <body>
-    <!-- Your page contont -->
-    {% block content %}{% endblock%}
+    <!-- Your navbar -->
+    <div class="container">
+      <div>
+        jdjjdjdj
+      </div>
+      {% block navbar %}
+      <nav class="navbar sticky-top navbar-expand navbar-light justify-content-between border" style="background-color: #fff;">
+          <a class="navbar-brand" href="#">CodePool</a>
+          <div class="navbar-nav nav-pills">
+            <a class="nav-item nav-link" href="#">Home</a>
+            <a class="nav-item nav-link active" href="#">Features</a>
+            <a class="nav-item nav-link" href="#">Pricing</a>
+          </div>
+      </nav>
+      {% endblock navbar %}
 
-    {% block scripts %}
-    <!-- Optional JavaScript -->
-    {{ bootstrap.load_js() }}
-    {% endblock %}
+      {% block page_content %}{% endblock page_content %}
+
+
+      {% block scripts %}
+      <!-- Optional JavaScript -->
+      {{ bootstrap.load_js() }}
+      {% endblock %}
+    </div>
   </body>
 </html>
