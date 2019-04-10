@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, current_app
 from .forms import LoginForm, PostForm
 from flask_login import login_required, login_user, logout_user, current_user
 from .. import db
@@ -16,14 +16,15 @@ def before_request():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.username.data).first()
+        user = User.query.filter_by(username=form.username.data).first()
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             next = request.args.get('next')
             if next is None or not next.startswith('/'):
                 next = url_for('main.index')
             return redirect(next)
-        flash("Invalid username or password.")
+        else:
+            flash("Invalid username or password.")
     return render_template('login.html', form=form)
 
 
@@ -57,14 +58,22 @@ def new_post():
         tag_list = []
         if tags is not None:
             for tag in tags.split(','):
-                if Tag.query.filter_by(tag_name=tag).first() is not None:
-                    tag_list.append(tag)
+                tag_in = Tag.query.filter_by(tag_name=tag).first() 
+                if tag_in:
+                    tag_list.append(tag_in)
                 else:
-                    db.session.add(Tag(tag_name=tag))
-                    tag_list.append(tag)        
-        post = Post(title=title, body=body, author=user, category=category, tags=tag_list)
+                    new_tag = Tag(tag_name=tag)
+                    db.session.add(new_tag)
+                    tag_list.append(new_tag)        
+        post = Post(title=title, body=body, author=user, category=category, tags=tag_list, years=get_years())
         db.session.add(post)
         db.session.commit()
-        flash('Post created.', 'success')
+        flash('Post created success')
         return redirect(url_for('blog.show_post', post_id=post.id))
-    return render_template('admin/new_post.html', form=form)
+    return render_template('new_post.html', form=form)
+
+
+@main.route('/test_login')
+@login_required
+def test_login():
+    return r'Test success!'

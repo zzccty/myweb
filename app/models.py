@@ -56,7 +56,7 @@ class Tag(db.Model):
     tag_name = db.Column(db.String(16))
 
     def __repr__(self):
-        return '<Tag %r>' % self.tab_name
+        return '<Tag %r>' % self.tag_name
 
 
 

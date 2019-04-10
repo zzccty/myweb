@@ -1,5 +1,26 @@
 {% extends 'base.html' %}
 {% block title %}CodePool - Home{% endblock %}
+{% block navbar %}
+<div>
+    jdjjdjdj
+</div>
+<nav class="navbar sticky-top navbar-expand navbar-light justify-content-between border" style="background-color: #fff;">
+    <a class="navbar-brand" href="#">CodePool</a>
+    <div class="navbar-nav nav-pills">
+      <a class="nav-item nav-link" href="#">Home</a>
+      <a class="nav-item nav-link active" href="#">Features</a>
+    </div>
+</nav>
+{% if current_user.is_authenticated %}
+<nav aria-label="breadcrumb" style="top:2.6rem; position: sticky; z-index: 1020">
+    <ol class="breadcrumb bg-warning">
+        <li class="breadcrumb-item"><a href="#">New</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Library</li>
+        <li class="breadcrumb-item"><a href="{{ url_for('main.logout')}}">Logout</a></li>
+    </ol>
+</nav>
+{% endif %}
+{% endblock navbar %}
 {% block page_content %}
 <div class="dividing_line"></div>
 <div class="container-fluid">
