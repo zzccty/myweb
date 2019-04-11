@@ -1,4 +1,5 @@
 from flask import render_template, flash, redirect, url_for, request, current_app
+from sqlalchemy.exc import IntegrityError
 from .forms import LoginForm, PostForm
 from flask_login import login_required, login_user, logout_user, current_user
 from .. import db
@@ -39,7 +40,8 @@ def logout():
 @main.route('/')
 def index():
     page = request.args.get('page', 1, type=int)
-    pagination = Post.query.order_by(Post.timestamp.desc()).paginate(page, current_app.config['FLASKY_POSTS_PER_PAGE'],error_out=False)
+    pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
+                page, current_app.config['FLASKY_POSTS_PER_PAGE'],error_out=False)
     posts = pagination.items
     return render_template('index.html', posts=posts, pagination=pagination)
 
@@ -49,10 +51,11 @@ def index():
 def new_post():
     user = current_user._get_current_object()
     form = PostForm()
+    form.categories.choices = [(cate.id, cate.category_name) for cate in Category.query.order_by('category_name')]
     if form.validate_on_submit():
         title = form.title.data
         body = form.body.data
-        category = Category.query.get(form.category.data)
+        category = Category.query.get(form.categories.data)
         tags = form.tags.data
         # 序列化tags
         tag_list = []
@@ -64,13 +67,25 @@ def new_post():
                 else:
                     new_tag = Tag(tag_name=tag)
                     db.session.add(new_tag)
-                    tag_list.append(new_tag)        
-        post = Post(title=title, body=body, author=user, category=category, tags=tag_list, years=get_years())
+                    tag_list.append(new_tag)    
+        post = Post(title=title, body=body, author=user, 
+                    category=category, tags=tag_list, years=get_years())
         db.session.add(post)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollBack()
+            flash('Post Failed')
+            return redirect(url_for('main.new_post'))
         flash('Post created success')
-        return redirect(url_for('blog.show_post', post_id=post.id))
+        return redirect(url_for('main.show_post', id=post.id))
     return render_template('new_post.html', form=form)
+
+
+@main.route('/post/<int:id>')
+def show_post(id):
+    post = Post.query.get_or_404(id)
+    return render_template('post.html', post=post)
 
 
 @main.route('/test_login')

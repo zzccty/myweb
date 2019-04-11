@@ -1,26 +1,21 @@
 {% extends 'base.html' %}
 {% block title %}CodePool - Home{% endblock %}
-{% block navbar %}
-<div>
-    jdjjdjdj
-</div>
-<nav class="navbar sticky-top navbar-expand navbar-light justify-content-between border" style="background-color: #fff;">
-    <a class="navbar-brand" href="#">CodePool</a>
-    <div class="navbar-nav nav-pills">
-      <a class="nav-item nav-link" href="#">Home</a>
-      <a class="nav-item nav-link active" href="#">Features</a>
+{% block top_content %}
+<div class="d-flex py-2 px-2">
+    <img src="{{ url_for('static', filename='images/author.jpg')}}" alt="author" class="img-thumbnail" style="width:80px; height:80px;">
+    <div style="width:auto; height:80px;">
+        <p class="font-weight-bold px-2 mb-0" style="font-size: 1.5rem;">Lovekernel</p>
+        <p class="text-muted mb-0 px-2" style="font-size: 0.8rem;">好好学习，天天向上。</p>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb px-2" style="background-color: #fff; font-size: 0.9rem;">
+                <li class="breadcrumb-item text-muted"><a style="color: black" href="{{url_for('main.new_post')}}">微博</a></li>
+                <li class="breadcrumb-item" aria-current="page"><a style="color: black" href="{{ url_for('main.logout')}}">微信</a></li>
+                <li class="breadcrumb-item"><a style="color: black" href="{{ url_for('main.logout')}}">github</a></li>
+            </ol>
+        </nav>
     </div>
-</nav>
-{% if current_user.is_authenticated %}
-<nav aria-label="breadcrumb" style="top:2.6rem; position: sticky; z-index: 1020">
-    <ol class="breadcrumb bg-warning">
-        <li class="breadcrumb-item"><a href="#">New</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Library</li>
-        <li class="breadcrumb-item"><a href="{{ url_for('main.logout')}}">Logout</a></li>
-    </ol>
-</nav>
-{% endif %}
-{% endblock navbar %}
+</div>
+{% endblock top_content %}
 {% block page_content %}
 <div class="dividing_line"></div>
 <div class="container-fluid">

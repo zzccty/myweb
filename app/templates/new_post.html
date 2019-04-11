@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from 'bootstrap/form.html' import render_form %}
+{% block page_content %}
+<div class="container-fluid" style="height: 1000px; background-color: rgb(186, 212, 206);">
+    <form method="post">
+        {{ render_form(form=form) }}
+    </form>
+        
+</div>
+{% endblock page_content %}
+
+{% block scripts %}
+{{ super() }}
+{{ ckeditor.load() }}
+{{ ckeditor.config(name='body') }}
+{% endblock scripts%}

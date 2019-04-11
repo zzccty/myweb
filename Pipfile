@@ -16,6 +16,7 @@ flask-migrate = "*"
 markdown = "*"
 bleach = "*"
 flask-wtf = "*"
+flask-moment = "*"
 
 [requires]
 python_version = "3.6"
