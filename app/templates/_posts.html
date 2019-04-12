@@ -1,12 +1,36 @@
 <div class="list-group list-group-flush">
     {% for post in posts %}
-    <a href="{{ url_for('main.show_post', id=post.id)}}" class="list-group-item list-group-item-action">
-        <div class="d-flex w-100 justify-content-between">
-        <h5 class="mb-1">{{ post.title }}</h5>
-        <small>{{ moment(post.timestamp).fromNow() }}</small>
+    <a href="{{ url_for('main.show_post', id=post.id)}}" class="d-flex flex-row list-group-item list-group-item-action">
+        <div class="d-none d-lg-inline-block">
+         <img src="{{ url_for('static', filename='images/author.jpg')}}" class="mr-3" alt="author" style="width:100px; height:100px;">
         </div>
-        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-        <small>Donec id elit non mi porta.</small>
-    </a>
+        <div>
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mt-0 mb-1">{{ post.title }}</h5>
+                <div><span class="iconfont icon-shijian post-icon-size align-middle"></span><small>{{ moment(post.timestamp).fromNow() }}</small></div>
+            </div>
+            <p class="mb-0" style="font-size:0.9rem">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.Maecenas sed diam eget risus varius blandit.</p>
+            <div class="d-flex w-100 justify-content-between bg-light">
+                <div>
+                    {% if post.author %}
+                        <span class="iconfont icon-guanliyuanrenzheng post-icon-size align-middle"></span><button type="button" class="btn btn-warning p-0" style="line-height: 1.1;">{{ post.author.username }} {% if post.author.username == 'test' %}<span class="badge badge-success">admin</span>{% endif %}</button>
+                    {% else %}
+                    <span>作者: 未知</span>
+                    {% endif %}
+                </div>
+                <div>
+                    {% if post.category %}
+                    <span class="iconfont icon-leimupinleifenleileibie"></span><button type="button" class="btn btn-secondary p-0 mr-1" style="line-height: 1.1;"> {{ post.category.category_name }}</button>
+                    {% endif %}
+                    {% if post.tags %}
+                    <span class="d-none d-md-inline-block">
+                        <span class="iconfont icon-biaoqian post-icon-size align-middle"></span>
+                        {% for tag in post.tags %}<button type="button" class="btn btn-secondary p-0 mr-1" style="line-height: 1.1;">{{ tag.tag_name }}</button>{% endfor %}  
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </a>    
     {% endfor %}
 </div>

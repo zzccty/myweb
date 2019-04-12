@@ -1,11 +1,25 @@
 {% extends 'base.html' %}
 {% block page_content%}
 <div class="dividing_line"></div>
-<div class="container-fluid">
+<div class="container-fluid ">
     <div class="row">
-        <div class="col-12 col-md-9 per-post-attr">
-            <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content" role="main">
-                <h2 class="bd-title">{{ post.title }}</h2>
+        <div class="col-12 col-md-9 per-post-attr px-1 py-3">
+            <main class="" role="main">
+                <h2 class="bd-title py-4" style="text-align:center">{{ post.title }}</h2>
+                <div class="border-bottom border-success d-flex flex-column flex-sm-row justify-content-between">
+                    <span class="wordage">发表日期: {{ moment(post.timestamp).format('L') }}</span>
+                    <div class="d-inline">
+                        <span class="wordage">阅读量: {{ post.reading_volume }}</span>
+                        {% if post.category.category_name  %}
+                        <span class="d-inline-block">分类: <a href="#" class="btn btn-secondary p-0 post-btn" role="button" aria-pressed="true" style="line-height: 1.1;">{{ post.category.category_name }}</a></span>
+                        {% endif %}
+                        <span class="">标签: </span>
+                        {% for tag in post.tags %}
+                        <a href="#" class="btn btn-secondary p-0 post-btn" role="button" aria-pressed="true" style="line-height: 1.1;">{{ tag.tag_name }}</a>
+                        {% endfor%}                       
+                    </div>
+                </div>
+                <div style="height:2rem;"></div>
                 {{ post.body | safe}}   
             </main>
         </div>

@@ -31,7 +31,12 @@ body {
     height: 1000px;
 }
 .per-post-attr {
-    
+    background-color: #fff;
+}
+
+.post-meta {
+    font-size: 12px;
+    color: #969696;
 }
 
 .col-md-9 {
@@ -46,4 +51,10 @@ body {
 
 .login-form {
     width: 60%;
+}
+.post-btn {
+    vertical-align: baseline;
+}
+.post-icon-size {
+    font-size: 19px;
 }

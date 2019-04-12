@@ -20,3 +20,8 @@ class PostForm(FlaskForm):
     tags = StringField('tags')
     categories = SelectField(u'categories', coerce=int)
     submit = SubmitField('Post')
+
+
+class AddCategoryForm(FlaskForm):
+    category_name = StringField('category name', validators=[DataRequired(),Length(1, 16)])
+    submit = SubmitField('Submit')

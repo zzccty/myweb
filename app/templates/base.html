@@ -9,6 +9,7 @@
     {% block styles %}
     <!-- Bootstrap CSS -->
     {{ bootstrap.load_css() }}
+    <link rel="stylesheet" href="{{url_for('static', filename='iconfont.css')}}" type="text/css">
     <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" type="text/css">
     {% endblock %}
 
@@ -20,7 +21,7 @@
     <div class="container">
       {% block top_content %}{% endblock top_content %}
       {% block navbar %}
-      <nav class="navbar sticky-top navbar-expand navbar-light justify-content-between border" style="background-color: #fff;">
+      <nav class="navbar sticky-top navbar-expand navbar-light justify-content-between border pr-0" style="background-color: #fff;">
           <a class="navbar-brand" href="{{ url_for('main.index')}}">CodePool</a>
           <div class="navbar-nav nav-pills">
             <a class="nav-item nav-link" href="{{ url_for('main.index')}}">Home</a>
@@ -32,6 +33,7 @@
           <ol class="breadcrumb .bg-secondary">
               <li class="breadcrumb-item"><a href="{{url_for('main.new_post')}}">New</a></li>
               <li class="breadcrumb-item active" aria-current="page">Library</li>
+              <li class="breadcrumb-item"><a href="{{ url_for('main.add_category')}}">add category</a></li>
               <li class="breadcrumb-item"><a href="{{ url_for('main.logout')}}">Logout</a></li>
           </ol>
       </nav>
@@ -45,6 +47,7 @@
       <!-- Optional JavaScript -->
       {{ bootstrap.load_js() }}
       {{ moment.include_moment() }}
+      {{ moment.lang("zh-cn") }}
       {% endblock %}
     </div>
   </body>

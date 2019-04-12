@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, current_app
 from sqlalchemy.exc import IntegrityError
-from .forms import LoginForm, PostForm
+from .forms import LoginForm, PostForm, AddCategoryForm
 from flask_login import login_required, login_user, logout_user, current_user
 from .. import db
 from ..models import User, Tag, Post, Category
@@ -43,7 +43,21 @@ def index():
     pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
                 page, current_app.config['FLASKY_POSTS_PER_PAGE'],error_out=False)
     posts = pagination.items
-    return render_template('index.html', posts=posts, pagination=pagination)
+    categories = Category.query.all()
+    return render_template('index.html', posts=posts, pagination=pagination, categories=categories)
+
+
+@main.route('/category/<string:category_name>')
+def get_posts_by_category_name(category_name):
+    page = request.args.get('page', 1, type=int)
+    category = Category.query.filter_by(category_name=category_name).first()
+    if category is not None:
+        pagination = category.posts.order_by(Post.timestamp.desc()).paginate(
+                page, current_app.config['FLASKY_POSTS_PER_PAGE'],error_out=False)
+        posts = pagination.items
+        categories = Category.query.all()
+        return render_template('index.html', posts=posts, pagination=pagination, categories=categories)
+
 
 
 @main.route('/post/new', methods=['GET', 'POST'])
@@ -56,6 +70,8 @@ def new_post():
         title = form.title.data
         body = form.body.data
         category = Category.query.get(form.categories.data)
+        # if category is not None:
+        #     category.post_count += 1
         tags = form.tags.data
         # 序列化tags
         tag_list = []
@@ -81,6 +97,19 @@ def new_post():
         return redirect(url_for('main.show_post', id=post.id))
     return render_template('new_post.html', form=form)
 
+@main.route('/addcategory', methods=['GET', 'POST'])
+@login_required
+def add_category():
+    form = AddCategoryForm()
+    if form.validate_on_submit():
+        category_name = form.category_name.data
+        if Category.add_category(category_name):
+            flash("Add category success.")
+            return redirect(url_for('main.index'))
+        else:
+            flash('Failed to add category')
+            return redirect(url_for('main.add_category'))
+    return render_template('add_category.html', form=form)
 
 @main.route('/post/<int:id>')
 def show_post(id):
