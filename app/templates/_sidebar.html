@@ -1,8 +1,6 @@
-<ul class="list-group">
-    {% for category in categories %}
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-        <a href="{{ url_for('main.get_posts_by_category_name', category_name=category.category_name)}}">{{ category.category_name }}</a>
-        <span class="badge badge-primary badge-pill">14</span>
-    </li>
-    {% endfor %}
-</ul>
+<div class="d-flex flex-column sidebar-attr">
+  <div class="py-2 px-4 border-bottom font-weight-bold">分类</div>
+  {% for category in categories %}
+  <div class="py-2 px-4"><a style="color: black" href="{{ url_for('main.get_posts_by_category_name', category_name=category.category_name)}}">{{ category.category_name }}</a><span class="badge badge-info">{{ category.post_count }}</span></div>
+  {% endfor %}
+</div>

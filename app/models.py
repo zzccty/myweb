@@ -34,7 +34,7 @@ tags_posts = db.Table('tags_posts',
 )
 
 
-# 文章描述
+# 文章描述 草稿字段
 class Post(db.Model):
     __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key=True)
@@ -53,7 +53,7 @@ class Post(db.Model):
     def __repr__(self):
         return '<Post %r>' % self.title
 
-
+# post count
 class Tag(db.Model):
     __tablename__ = 'tags'
     id = db.Column(db.Integer, primary_key=True)
@@ -63,7 +63,6 @@ class Tag(db.Model):
         return '<Tag %r>' % self.tag_name
 
 
-# post_count
 class Category(db.Model):
     __tablename__ = 'categories'
     id = db.Column(db.Integer, primary_key=True)
@@ -74,12 +73,15 @@ class Category(db.Model):
         return '<Category %r>' % self.category_name
 
     def delete_category(self):
+        if self.id == 1:
+            return False
         default_category = Category.query.get(1)
-        posts = self.posts[:]
-        for post in posts:
+        for post in self.posts:
             post.category = default_category
+            default_category.post_count += 1
         db.session.delete(self)
         db.session.commit()
+        return True
 
     @classmethod
     def add_category(cls, category_name):

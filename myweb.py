@@ -4,7 +4,7 @@ from flask_migrate import Migrate
 from app.models import User, Tag, Category, Post, Category_by_date
 
 
-app = create_app(os.getenv('FLASK_COMFIG') or 'default')
+app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 migrate = Migrate(app, db)
 
 

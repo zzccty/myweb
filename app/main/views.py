@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, current_app
 from sqlalchemy.exc import IntegrityError
-from .forms import LoginForm, PostForm, AddCategoryForm
+from .forms import LoginForm, PostForm, AddCategoryForm, Rename_CategoryForm, Delete_CategoryForm
 from flask_login import login_required, login_user, logout_user, current_user
 from .. import db
 from ..models import User, Tag, Post, Category
@@ -44,7 +44,8 @@ def index():
                 page, current_app.config['FLASKY_POSTS_PER_PAGE'],error_out=False)
     posts = pagination.items
     categories = Category.query.all()
-    return render_template('index.html', posts=posts, pagination=pagination, categories=categories)
+    tags = Tag.query.all()
+    return render_template('index.html', posts=posts, pagination=pagination, categories=categories, tags=tags)
 
 
 @main.route('/category/<string:category_name>')
@@ -56,7 +57,8 @@ def get_posts_by_category_name(category_name):
                 page, current_app.config['FLASKY_POSTS_PER_PAGE'],error_out=False)
         posts = pagination.items
         categories = Category.query.all()
-        return render_template('index.html', posts=posts, pagination=pagination, categories=categories)
+        tags = Tag.query.all()
+        return render_template('index.html', posts=posts, pagination=pagination, categories=categories, tags=tags)
 
 
 
@@ -70,8 +72,8 @@ def new_post():
         title = form.title.data
         body = form.body.data
         category = Category.query.get(form.categories.data)
-        # if category is not None:
-        #     category.post_count += 1
+        if category is not None:
+            category.post_count += 1
         tags = form.tags.data
         # 序列化tags
         tag_list = []
@@ -97,24 +99,83 @@ def new_post():
         return redirect(url_for('main.show_post', id=post.id))
     return render_template('new_post.html', form=form)
 
-@main.route('/addcategory', methods=['GET', 'POST'])
+
+@main.route('/category/manage')
+@login_required
+def manage_category():
+    add_category_form = AddCategoryForm()
+    rename_category_form = Rename_CategoryForm()
+    delete_category_form = Delete_CategoryForm()
+    choices = [(cate.id, cate.category_name) for cate in Category.query.order_by('category_name')]
+    rename_category_form.old_category_name.choices = choices
+    delete_category_form.category_name.choices = choices
+
+    return render_template('manage_cate.html', 
+                            add_category_form=add_category_form, 
+                            rename_category_form=rename_category_form,
+                            delete_category_form=delete_category_form)
+
+
+@main.route('/category/delete', methods=['POST'])
+@login_required
+def delete_category():
+    delete_category_form = Delete_CategoryForm()
+    delete_category_form.category_name.choices = [(cate.id, cate.category_name) for cate in Category.query.order_by('category_name')]
+    if delete_category_form.validate_on_submit():
+        category = Category.query.get(delete_category_form.category_name.data)
+        if category.delete_category():
+            flash("Delete success.")
+            return redirect(url_for('main.index'))
+        else:
+            flash('Failed to delete category')
+            return redirect(url_for('main.manage_category'))
+
+
+@main.route('/category/rename', methods=['POST'])
+@login_required
+def rename_category():
+    rename_category_form = Rename_CategoryForm()
+    rename_category_form.old_category_name.choices = [(cate.id, cate.category_name) for cate in Category.query.order_by('category_name')]
+    if rename_category_form.validate_on_submit():
+        category = Category.query.get(rename_category_form.old_category_name.data)
+        category.category_name = rename_category_form.new_category_name.data
+        db.session.commit()
+        return redirect(url_for('main.index'))
+    return redirect(url_for('main.manage_category'))
+
+
+
+@main.route('/category/add', methods=['POST'])
 @login_required
 def add_category():
-    form = AddCategoryForm()
-    if form.validate_on_submit():
-        category_name = form.category_name.data
+    add_category_form = AddCategoryForm()
+    if add_category_form.validate_on_submit():
+        category_name = add_category_form.category_name.data
         if Category.add_category(category_name):
             flash("Add category success.")
             return redirect(url_for('main.index'))
         else:
             flash('Failed to add category')
-            return redirect(url_for('main.add_category'))
-    return render_template('add_category.html', form=form)
+            return redirect(url_for('main.manage_category'))
+
+
 
 @main.route('/post/<int:id>')
 def show_post(id):
     post = Post.query.get_or_404(id)
     return render_template('post.html', post=post)
+
+
+@main.route('/tag/<string:name>')
+def get_post_by_tag(name):
+    page = request.args.get('page', 1, type=int)
+    tag = Tag.query.filter_by(tag_name=name).first_or_404()
+    pagination = tag.posts.order_by(Post.timestamp.desc()).paginate(
+                page, current_app.config['FLASKY_POSTS_PER_PAGE'],error_out=False)
+    posts = pagination.items
+    categories = Category.query.all()
+    tags = Tag.query.all()
+    return render_template('index.html', posts=posts, pagination=pagination, categories=categories, tags=tags)
 
 
 @main.route('/test_login')

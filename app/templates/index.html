@@ -19,8 +19,9 @@
 {% block page_content %}
 <div class="dividing_line"></div>
 <div class="container-fluid">
-    <div class="row">
+    <div class="row"> 
         <div class="col-12 col-md-9 page-attr">
+        {% block main_container %}
             {% for message in get_flashed_messages() %}
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 <strong>{{ message }}</strong>
@@ -30,9 +31,16 @@
             </div>
             {% endfor %}
             {% include '_posts.html' %}
-        </div>
+        {% endblock main_container %}
+        </div>        
         <div class="col-md-3 pr-0 pl-0 pl-md-3 pt-2 pt-md-0">
+            <div class="d-flex flex-column">
+            {% block sidebar_container %}
                 {% include '_sidebar.html' %}
+                <div class="dividing_line"></div>
+                {% include '_sidebar_tag.html' %}
+            {% endblock sidebar_container %}
+            </div>
         </div>
     </div>
 </div>
