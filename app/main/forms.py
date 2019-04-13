@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, SubmitField, StringField, BooleanField, SelectField
+from wtforms import PasswordField, SubmitField, StringField, BooleanField, SelectField, TextAreaField
 from wtforms.validators import DataRequired, Email, Length, regexp
 from flask_ckeditor import CKEditorField
 from ..models import Category
@@ -19,6 +19,7 @@ class LoginForm(FlaskForm):
 
 class PostForm(FlaskForm):
     title = StringField('title', validators=[DataRequired(), Length(1, 64)])
+    description = TextAreaField('decription')
     body = CKEditorField('body')
     tags = StringField('tags')
     categories = SelectField(u'categories', coerce=int)

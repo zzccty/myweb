@@ -71,6 +71,7 @@ def new_post():
     if form.validate_on_submit():
         title = form.title.data
         body = form.body.data
+        description = form.description.data
         category = Category.query.get(form.categories.data)
         if category is not None:
             category.post_count += 1
@@ -86,7 +87,7 @@ def new_post():
                     new_tag = Tag(tag_name=tag)
                     db.session.add(new_tag)
                     tag_list.append(new_tag)    
-        post = Post(title=title, body=body, author=user, 
+        post = Post(title=title, body=body, author=user, description=description,
                     category=category, tags=tag_list, years=get_years())
         db.session.add(post)
         try:

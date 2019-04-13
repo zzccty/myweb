@@ -46,9 +46,14 @@ class Post(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
     category_by_date_id = db.Column(db.Integer, db.ForeignKey('category_by_date.id'))
     reading_volume = db.Column(db.Integer, default=0)
+    description = db.Column(db.Text)
+    body_draft = db.Column(db.Text)
+    is_draft = db.Column(db.Boolean, default=False)
+    image_url = db.Column(db.String(64))
     category = db.relationship('Category', backref=db.backref('posts', lazy='dynamic'))
     tags = db.relationship('Tag', secondary=tags_posts, lazy='subquery',
                                  backref=db.backref('posts', lazy='dynamic'))
+    
 
     def __repr__(self):
         return '<Post %r>' % self.title
@@ -58,6 +63,7 @@ class Tag(db.Model):
     __tablename__ = 'tags'
     id = db.Column(db.Integer, primary_key=True)
     tag_name = db.Column(db.String(16))
+    post_count = db.Column(db.Integer, default=0)
 
     def __repr__(self):
         return '<Tag %r>' % self.tag_name

@@ -2,15 +2,17 @@
     {% for post in posts %}
     <a href="{{ url_for('main.show_post', id=post.id)}}" class="d-flex flex-row list-group-item list-group-item-action">
         <div class="d-none d-lg-inline-block">
+        {% if post.description %}
          <img src="{{ url_for('static', filename='images/author.jpg')}}" class="mr-3" alt="author" style="width:100px; height:100px;">
+        {% endif %}
         </div>
-        <div>
-            <div class="d-flex w-100 justify-content-between">
+        <div style="width:100%;">
+            <div class="container-fluid d-flex w-100 justify-content-between px-0">
                 <h5 class="mt-0 mb-1">{{ post.title }}</h5>
                 <div><span class="iconfont icon-shijian post-icon-size align-middle"></span><small>{{ moment(post.timestamp).fromNow() }}</small></div>
             </div>
-            <p class="mb-0" style="font-size:0.9rem">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.Maecenas sed diam eget risus varius blandit.</p>
-            <div class="d-flex w-100 justify-content-between bg-light">
+            <p class="mb-0" style="font-size:0.9rem">{% if post.description %}{{ post.description | truncate(100) }}{% endif %}</p>
+            <div class="container-fluid d-flex w-100 justify-content-between px-0">
                 <div>
                     {% if post.author %}
                         <span class="iconfont icon-guanliyuanrenzheng post-icon-size align-middle"></span><button type="button" class="btn btn-warning p-0" style="line-height: 1.1;">{{ post.author.username }} {% if post.author.username == 'test' %}<span class="badge badge-success">admin</span>{% endif %}</button>
