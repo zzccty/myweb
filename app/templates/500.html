@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block page_content %}
+<div class="container index-attr">
+    <div class="col-10 col-md-6 mx-auto py-5">
+        <div class="card">
+            <div class="card-header">
+            喔噢，访问失败
+            </div>
+            <div class="card-body">
+            <h5 class="card-title">服务器内部错误</h5>
+            <p class="card-text">这个错误是网站内部发生的，管理员很快就会排查原因，很抱歉给您造成不便。</p>
+            <a href="{{ url_for('main.index')}}" class="btn btn-primary">返回首页</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock page_content %}

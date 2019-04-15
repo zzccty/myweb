@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block page_content%}
 <div class="dividing_line"></div>
-<div class="container-fluid index-attr" style="height:1000px;">
+<div class="container-fluid index-attr">
     <div class="row">
         <div class="col-12 col-md-9 per-post-attr px-1">
-            <div class="bd-title py-4 font-weight-bolder" style="text-align:center;font-size: 2rem;">{{ post.title }}</div>
+            <div class="bd-title py-4 font-weight-bolder" style="text-align:center;font-size: 1.8rem;">{{ post.title }}</div>
             <div class="border-bottom border-success d-flex flex-column flex-sm-row justify-content-between">
                 <span class="wordage">发表日期: {{ moment(post.timestamp).format('L') }}</span>
                 <div class="d-inline">

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block page_content %}
+<div class="container index-attr">
+    <div class="col-10 col-md-6 mx-auto py-5">
+        <div class="card">
+            <div class="card-header">
+            错误
+            </div>
+            <div class="card-body">
+            <h5 class="card-title">您访问的页面不存在</h5>
+            <p class="card-text">请您检查您输入的网址是否正确</p>
+            <a href="{{ url_for('main.index')}}" class="btn btn-primary">返回首页</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock page_content %}

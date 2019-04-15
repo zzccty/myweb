@@ -56,7 +56,7 @@ def get_posts_by_category_name(category_name):
     category = Category.query.filter_by(category_name=category_name).first()
     if category is not None:
         pagination = category.posts.order_by(Post.timestamp.desc()).paginate(
-                page, current_app.config['FLASKY_POSTS_PER_PAGE'],error_out=False)
+                page, int(current_app.config['FLASKY_POSTS_PER_PAGE']),error_out=False)
         posts = pagination.items
         categories = Category.query.all()
         tags = Tag.query.all()
@@ -212,7 +212,7 @@ def get_post_by_tag(name):
     page = request.args.get('page', 1, type=int)
     tag = Tag.query.filter_by(tag_name=name).first_or_404()
     pagination = tag.posts.order_by(Post.timestamp.desc()).paginate(
-                page, current_app.config['FLASKY_POSTS_PER_PAGE'],error_out=False)
+                page, int(current_app.config['FLASKY_POSTS_PER_PAGE']),error_out=False)
     posts = pagination.items
     categories = Category.query.all()
     tags = Tag.query.all()
