@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% from 'bootstrap/form.html' import render_form %}
 {% block page_content %}
-<div class="container-fluid" style="height: 1000px; background-color: rgb(186, 212, 206);">
+<div class="container-fluid">
     {{ render_form(form=form, enctype='multipart/form-data') }}
 </div>
 {% endblock page_content %}
@@ -9,4 +9,9 @@
 {% block scripts %}
 {{ super() }}
 {{ pagedown.include_pagedown() }}
+<script>
+    $('#flask-pagedown-body').on('click',function() {
+        $('#flask-pagedown-body-preview').addClass('border border-success p-2 my-2');
+    });
+</script>
 {% endblock scripts%}

@@ -56,7 +56,7 @@ class Delete_PostForm(FlaskForm):
 
 class Edit_PostForm(FlaskForm):
     title = StringField('title', validators=[DataRequired(), Length(1, 64)])
-    image = FileField('image',validators=[FileRequired(), FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])
+    image = FileField('image',validators=[FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])
     post_description = TextAreaField('post_description')
     body = PageDownField('body')
     tags = StringField('tags')

@@ -74,43 +74,42 @@ def new_post():
         title = form.title.data
         body = form.body.data
         post_description = form.post_description.data
-        f = form.image.data
-        if f:
-            filename = secure_filename(f.filename)
-            url = os.path.join(
-                current_app.root_path, 'static', 'photos', filename
-            )
-            f.save(url)
-            image_url = os.path.join('static','photos', filename)
-        else:
-            image_url = ''
-        category = Category.query.get(form.categories.data)
-        if category is not None:
-            category.post_count += 1
-        tags = form.tags.data
-        # 序列化tags
-        tag_list = []
-        if tags is not None:
-            for tag in tags.split(','):
-                tag_in = Tag.query.filter_by(tag_name=tag).first() 
-                if tag_in:
-                    tag_in.post_count += 1
-                    tag_list.append(tag_in)
-                else:
-                    new_tag = Tag(tag_name=tag, post_count=1)
-                    db.session.add(new_tag)
-                    tag_list.append(new_tag)
         if form.publish.data:
+            f = form.image.data
+            if f:
+                filename = secure_filename(f.filename)
+                url = os.path.join(
+                    current_app.root_path, 'static', 'photos', filename
+                )
+                f.save(url)
+                image_url = os.path.join('static','photos', filename)
+            else:
+                image_url = ''
+            category = Category.query.get(form.categories.data)
+            if category is not None:
+                category.post_count += 1
+            tags = form.tags.data
+            # 序列化tags
+            tag_list = []
+            if tags is not None:
+                for tag in tags.split(','):
+                    tag_in = Tag.query.filter_by(tag_name=tag).first() 
+                    if tag_in:
+                        tag_in.post_count += 1
+                        tag_list.append(tag_in)
+                    else:
+                        new_tag = Tag(tag_name=tag, post_count=1)
+                        db.session.add(new_tag)
+                        tag_list.append(new_tag)
             post = Post(title=title, body=body, author=user, post_description=post_description,
                     category=category, tags=tag_list, years=get_years(), image_url=image_url)
         else:
-            post = Post(title=title, body_draft=body, author=user, post_description=post_description, is_draft=True,
-                        category=category, tags=tag_list, years=get_years(), image_url=image_url)
+            post = Post(title=title, body_draft=body, body=body, author=user, post_description=post_description, is_draft=True)
         db.session.add(post)
         try:
             db.session.commit()
         except IntegrityError:
-            db.session.rollBack()
+            db.session.rollback()
             flash('Post Failed')
             return redirect(url_for('main.new_post'))
         flash('Post created success')
@@ -118,72 +117,83 @@ def new_post():
     return render_template('new_post.html', form=form)
 
 
-@main.route('/post/edit/<int:id>')
+@main.route('/post/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_post(id):
+    user = current_user._get_current_object()
     post = Post.query.get(id)
     if post is None:
         abort(403)
     form = Edit_PostForm()
-    old_cate = post.category
-    old_tags = post.tags
     form.title.data = post.title
-    form.post_description.date = post.post_description
-    if post.is_draft is True:
+    form.post_description.data = post.post_description
+    if post.is_draft:
         form.body.data = post.body_draft
     else:
-        form.body.date = post.body
+        form.body.data = post.body
+    old_cate = post.category
+    old_tags = post.tags
     form.categories.choices = [(cate.id, cate.category_name) for cate in Category.query.order_by('category_name')]
     if form.validate_on_submit():
         title = form.title.data
         body = form.body.data
         post_description = form.post_description.data
-        f = form.image.data
-        if f:
-            filename = secure_filename(f.filename)
-            url = os.path.join(
-                current_app.root_path, 'static', 'photos', filename
-            )
-            f.save(url)
-            image_url = os.path.join('static','photos', filename)
-        else:
-            image_url = ''
-        category = Category.query.get(form.categories.data)
-        if category is not None:
-            category.post_count += 1
-        tags = form.tags.data
-        # 序列化tags
-        tag_list = []
-        if tags is not None:
-            for tag in tags.split(','):
-                tag_in = Tag.query.filter_by(tag_name=tag).first() 
-                if tag_in:
-                    tag_in.post_count += 1
-                    tag_list.append(tag_in)
-                else:
-                    new_tag = Tag(tag_name=tag, post_count=1)
-                    db.session.add(new_tag)
-                    tag_list.append(new_tag)
         if form.publish.data:
-            post = Post(title=title, body=body, author=user, post_description=post_description,is_draft=False,
-                    category=category, tags=tag_list, years=get_years(), image_url=image_url)
+            f = form.image.data
+            if f:
+                filename = secure_filename(f.filename)
+                url = os.path.join(
+                    current_app.root_path, 'static', 'photos', filename
+                )
+                f.save(url)
+                image_url = os.path.join('static','photos', filename)
+            else:
+                image_url = ''
+            category = Category.query.get(form.categories.data)
+            if category is not None:
+                category.post_count += 1
+            tags = form.tags.data
+            # 序列化tags
+            tag_list = []
+            if tags is not None:
+                for tag in tags.split(','):
+                    tag_in = Tag.query.filter_by(tag_name=tag).first() 
+                    if tag_in:
+                        tag_in.post_count += 1
+                        tag_list.append(tag_in)
+                    else:
+                        new_tag = Tag(tag_name=tag, post_count=1)
+                        db.session.add(new_tag)
+                        tag_list.append(new_tag)
+            post.title = title
+            post.body = body
+            post.author = user
+            post.post_description = post_description
+            post.is_draft = False
+            post.category = category
+            post.tags = tag_list
+            post.years = get_years()
+            image_url = image_url
+            if old_cate.post_count:
+                old_cate.post_count -= 1
+            if old_cate.post_count == 0:
+                db.session.delete(cate)
+            for tag in old_tags:
+                if tag.post_count:
+                    tag.post_count -= 1
+                if tag.post_count == 0:
+                    db.session.delete(tag)
         else:
-            post = Post(title=title, body=body, body_draft=body, author=user, post_description=post_description, is_draft=True,
-                        category=category, tags=tag_list, years=get_years(), image_url=image_url)
-        if old_cate.post_count:
-            old_cate.post_count -= 1
-        if old_cate.post_count == 0:
-            db.session.delete(cate)
-        for tag in old_tags:
-            if tag.post_count:
-                tag.post_count -= 1
-            if tag.post_count == 0:
-                db.session.delete(tag)
-        db.session.add(post)
+            post.author = user
+            post.title = title
+            post.body = body
+            post.body_draft = body
+            post.post_description = post_description
+            post.is_draft = True
         try:
             db.session.commit()
         except IntegrityError:
-            db.session.rollBack()
+            db.session.rollback()
             flash('Post Failed')
             return redirect(url_for('main.new_post'))
         flash('Post created success')
