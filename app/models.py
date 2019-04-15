@@ -3,6 +3,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask_login import UserMixin
 from flask import flash
+from markdown import markdown
+import bleach
 from . import login_manager
 
 
@@ -40,25 +42,34 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64), unique=True, index=True)
     body = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    body_html = db.Column(db.Text)
+    body_draft = db.Column(db.Text)
+    is_draft = db.Column(db.Boolean, default=False)
     topping = db.Column(db.Boolean, default=False)
+    reading_volume = db.Column(db.Integer, default=0, index=True)
+    post_description = db.Column(db.Text)
+    image_url = db.Column(db.String(64))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
     category_by_date_id = db.Column(db.Integer, db.ForeignKey('category_by_date.id'))
-    reading_volume = db.Column(db.Integer, default=0)
-    description = db.Column(db.Text)
-    body_draft = db.Column(db.Text)
-    is_draft = db.Column(db.Boolean, default=False)
-    image_url = db.Column(db.String(64))
     category = db.relationship('Category', backref=db.backref('posts', lazy='dynamic'))
     tags = db.relationship('Tag', secondary=tags_posts, lazy='subquery',
                                  backref=db.backref('posts', lazy='dynamic'))
-    
-    def get_image_url(self):
-        return self.image_url
+
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
+                        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul', 'h1',
+                        'h2', 'h3', 'p']
+        target.body_html = bleach.linkify(bleach.clean(markdown(value, output_format='html'),
+                                          tags=allowed_tags, strip=True))
 
     def __repr__(self):
         return '<Post %r>' % self.title
+
+db.event.listen(Post.body, 'set', Post.on_changed_body)
+
 
 # post count
 class Tag(db.Model):
@@ -114,6 +125,10 @@ class Category_by_date(db.Model):
 
     def __repr__(self):
         return '<Category by date: %r>' % self.date
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 

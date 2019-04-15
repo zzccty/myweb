@@ -2,7 +2,7 @@
     {% for post in posts %}
     <a href="{{ url_for('main.show_post', id=post.id)}}" class="d-flex flex-row list-group-item list-group-item-action">
         <div class="d-none d-lg-inline-block">
-        {% if post.description %}
+        {% if post.post_description %}
          <img src="{{ post.image_url }}" class="mr-3" alt="author" style="width:100px; height:100px;">
         {% endif %}
         </div>
@@ -11,7 +11,7 @@
                 <h5 class="mt-0 mb-1">{{ post.title }}</h5>
                 <div><span class="iconfont icon-shijian post-icon-size align-middle"></span><small>{{ moment(post.timestamp).fromNow() }}</small></div>
             </div>
-            <p class="mb-0" style="font-size:0.9rem">{% if post.description %}{{ post.description | truncate(100) }}{% endif %}</p>
+            <p class="mb-0" style="font-size:0.9rem">{% if post.post_description %}{{ post.post_description | truncate(100) }}{% endif %}</p>
             <div class="container-fluid d-flex w-100 justify-content-between px-0">
                 <div>
                     {% if post.author %}

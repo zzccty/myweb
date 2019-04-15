@@ -1,6 +1,6 @@
-from flask import render_template, flash, redirect, url_for, request, current_app
+from flask import render_template, flash, redirect, url_for, request, current_app, abort
 from sqlalchemy.exc import IntegrityError
-from .forms import LoginForm, PostForm, AddCategoryForm, Rename_CategoryForm, Delete_CategoryForm, Delete_PostForm
+from .forms import LoginForm, PostForm, AddCategoryForm, Rename_CategoryForm, Delete_CategoryForm, Delete_PostForm, Edit_PostForm
 from flask_login import login_required, login_user, logout_user, current_user
 from werkzeug.utils import secure_filename
 import os
@@ -42,7 +42,7 @@ def logout():
 @main.route('/')
 def index():
     page = request.args.get('page', 1, type=int)
-    pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
+    pagination = Post.query.filter_by(is_draft=False).order_by(Post.timestamp.desc()).paginate(
                 page, int(current_app.config['FLASKY_POSTS_PER_PAGE']), error_out=False)
     posts = pagination.items
     categories = Category.query.all()
@@ -55,7 +55,7 @@ def get_posts_by_category_name(category_name):
     page = request.args.get('page', 1, type=int)
     category = Category.query.filter_by(category_name=category_name).first()
     if category is not None:
-        pagination = category.posts.order_by(Post.timestamp.desc()).paginate(
+        pagination = category.posts.filter_by(is_draft=False).order_by(Post.timestamp.desc()).paginate(
                 page, int(current_app.config['FLASKY_POSTS_PER_PAGE']),error_out=False)
         posts = pagination.items
         categories = Category.query.all()
@@ -73,14 +73,17 @@ def new_post():
     if form.validate_on_submit():
         title = form.title.data
         body = form.body.data
-        description = form.description.data
+        post_description = form.post_description.data
         f = form.image.data
-        filename = secure_filename(f.filename)
-        url = os.path.join(
-            current_app.root_path, 'static', 'photos', filename
-        )
-        f.save(url)
-        image_url = os.path.join('static','photos', filename)
+        if f:
+            filename = secure_filename(f.filename)
+            url = os.path.join(
+                current_app.root_path, 'static', 'photos', filename
+            )
+            f.save(url)
+            image_url = os.path.join('static','photos', filename)
+        else:
+            image_url = ''
         category = Category.query.get(form.categories.data)
         if category is not None:
             category.post_count += 1
@@ -96,9 +99,13 @@ def new_post():
                 else:
                     new_tag = Tag(tag_name=tag, post_count=1)
                     db.session.add(new_tag)
-                    tag_list.append(new_tag)    
-        post = Post(title=title, body=body, author=user, description=description,
+                    tag_list.append(new_tag)
+        if form.publish.data:
+            post = Post(title=title, body=body, author=user, post_description=post_description,
                     category=category, tags=tag_list, years=get_years(), image_url=image_url)
+        else:
+            post = Post(title=title, body_draft=body, author=user, post_description=post_description, is_draft=True,
+                        category=category, tags=tag_list, years=get_years(), image_url=image_url)
         db.session.add(post)
         try:
             db.session.commit()
@@ -109,6 +116,79 @@ def new_post():
         flash('Post created success')
         return redirect(url_for('main.show_post', id=post.id))
     return render_template('new_post.html', form=form)
+
+
+@main.route('/post/edit/<int:id>')
+@login_required
+def edit_post(id):
+    post = Post.query.get(id)
+    if post is None:
+        abort(403)
+    form = Edit_PostForm()
+    old_cate = post.category
+    old_tags = post.tags
+    form.title.data = post.title
+    form.post_description.date = post.post_description
+    if post.is_draft is True:
+        form.body.data = post.body_draft
+    else:
+        form.body.date = post.body
+    form.categories.choices = [(cate.id, cate.category_name) for cate in Category.query.order_by('category_name')]
+    if form.validate_on_submit():
+        title = form.title.data
+        body = form.body.data
+        post_description = form.post_description.data
+        f = form.image.data
+        if f:
+            filename = secure_filename(f.filename)
+            url = os.path.join(
+                current_app.root_path, 'static', 'photos', filename
+            )
+            f.save(url)
+            image_url = os.path.join('static','photos', filename)
+        else:
+            image_url = ''
+        category = Category.query.get(form.categories.data)
+        if category is not None:
+            category.post_count += 1
+        tags = form.tags.data
+        # 序列化tags
+        tag_list = []
+        if tags is not None:
+            for tag in tags.split(','):
+                tag_in = Tag.query.filter_by(tag_name=tag).first() 
+                if tag_in:
+                    tag_in.post_count += 1
+                    tag_list.append(tag_in)
+                else:
+                    new_tag = Tag(tag_name=tag, post_count=1)
+                    db.session.add(new_tag)
+                    tag_list.append(new_tag)
+        if form.publish.data:
+            post = Post(title=title, body=body, author=user, post_description=post_description,is_draft=False,
+                    category=category, tags=tag_list, years=get_years(), image_url=image_url)
+        else:
+            post = Post(title=title, body=body, body_draft=body, author=user, post_description=post_description, is_draft=True,
+                        category=category, tags=tag_list, years=get_years(), image_url=image_url)
+        if old_cate.post_count:
+            old_cate.post_count -= 1
+        if old_cate.post_count == 0:
+            db.session.delete(cate)
+        for tag in old_tags:
+            if tag.post_count:
+                tag.post_count -= 1
+            if tag.post_count == 0:
+                db.session.delete(tag)
+        db.session.add(post)
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollBack()
+            flash('Post Failed')
+            return redirect(url_for('main.new_post'))
+        flash('Post created success')
+        return redirect(url_for('main.show_post', id=post.id))
+    return render_template('edit_post.html', form=form)
 
 
 @main.route('/post/delete/<int:id>', methods=['GET', 'POST'])
@@ -134,11 +214,11 @@ def delete_post(id):
     return redirect(url_for('main.index'))
 
 
-@main.route('/post/delete1')
+@main.route('/post/manage')
 @login_required
-def delete_post1():
+def manage_post():
     posts = Post.query.order_by(Post.timestamp.desc()).all()
-    return render_template('delete_post.html', posts=posts)
+    return render_template('manage_post.html', posts=posts)
 
 
 @main.route('/category/manage')
@@ -211,7 +291,7 @@ def show_post(id):
 def get_post_by_tag(name):
     page = request.args.get('page', 1, type=int)
     tag = Tag.query.filter_by(tag_name=name).first_or_404()
-    pagination = tag.posts.order_by(Post.timestamp.desc()).paginate(
+    pagination = tag.posts.filter_by(is_draft=False).order_by(Post.timestamp.desc()).paginate(
                 page, int(current_app.config['FLASKY_POSTS_PER_PAGE']),error_out=False)
     posts = pagination.items
     categories = Category.query.all()

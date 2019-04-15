@@ -17,6 +17,7 @@ bleach = "*"
 flask-wtf = "*"
 flask-moment = "*"
 bootstrap-flask = "*"
+flask-pagedown = "*"
 
 [requires]
 python_version = "3.6"

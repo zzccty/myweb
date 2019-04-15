@@ -20,7 +20,7 @@
             </div>
             <div style="height:2rem;"></div>
             <span class="" style="font-size: 1.2rem;">导语</span>
-            <p class="text-muted"> {{ post.description }}</p>
+            <p class="text-muted"> {{ post.post_description }}</p>
             <div class="row no-gutters">
                 <div class="col-6 col-md-10 mx-auto">
                     <div class="text-center mb-3">
@@ -28,7 +28,11 @@
                     </div>
                 </div>
             </div>
-            {{ post.body | safe}}   
+            {% if post.body_html %}
+            {{ post.body_html | safe}}
+            {% else %}
+            {{ post.body | safe }}
+            {% endif %}
         </div>
         <div class="d-none d-md-block col-md-3 pr-md-0">
             {% include '_author_card.html' %}
@@ -42,7 +46,6 @@
 {% endblock %}
 {% block scripts %}
 {{ super() }}
-{{ ckeditor.load() }}
 <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.toc.min.js')}}"></script>
 <script>
         $(document).ready(function() {

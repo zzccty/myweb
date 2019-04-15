@@ -3,7 +3,7 @@ from wtforms import PasswordField, SubmitField, StringField, BooleanField, Selec
 from wtforms.validators import DataRequired, Email, Length, regexp
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from werkzeug.utils import secure_filename
-from flask_ckeditor import CKEditorField
+from flask_pagedown.fields import PageDownField
 from ..models import Category
 from wtforms import ValidationError
 from flask import flash
@@ -22,11 +22,12 @@ class LoginForm(FlaskForm):
 class PostForm(FlaskForm):
     title = StringField('title', validators=[DataRequired(), Length(1, 64)])
     image = FileField('image',validators=[FileRequired(), FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])
-    description = TextAreaField('decription')
-    body = CKEditorField('body')
+    post_description = TextAreaField('post_description')
+    body = PageDownField('body')
     tags = StringField('tags')
     categories = SelectField(u'categories', coerce=int)
-    submit = SubmitField('Post')
+    publish = SubmitField('publish')
+    save = SubmitField('save')
 
 
 class AddCategoryForm(FlaskForm):
@@ -51,3 +52,14 @@ class Delete_CategoryForm(FlaskForm):
 
 class Delete_PostForm(FlaskForm):
     submit = SubmitField('delete')
+
+
+class Edit_PostForm(FlaskForm):
+    title = StringField('title', validators=[DataRequired(), Length(1, 64)])
+    image = FileField('image',validators=[FileRequired(), FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])
+    post_description = TextAreaField('post_description')
+    body = PageDownField('body')
+    tags = StringField('tags')
+    categories = SelectField(u'categories', coerce=int)
+    publish = SubmitField('publish')
+    save = SubmitField('save')
