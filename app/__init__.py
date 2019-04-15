@@ -4,6 +4,7 @@ from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 from flask_ckeditor import CKEditor
 from flask_moment import Moment
+import os
 
 # import local object/module
 from config import config
@@ -20,6 +21,10 @@ moment = Moment()
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
     
     db.init_app(app)
     login_manager.init_app(app)

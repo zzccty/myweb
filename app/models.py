@@ -54,6 +54,8 @@ class Post(db.Model):
     tags = db.relationship('Tag', secondary=tags_posts, lazy='subquery',
                                  backref=db.backref('posts', lazy='dynamic'))
     
+    def get_image_url(self):
+        return self.image_url
 
     def __repr__(self):
         return '<Post %r>' % self.title

@@ -1,8 +1,8 @@
-"""First db
+"""first db
 
-Revision ID: dfcddbcb65db
+Revision ID: ed37f9528d53
 Revises: 
-Create Date: 2019-04-12 23:50:29.089140
+Create Date: 2019-04-14 15:13:26.349108
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'dfcddbcb65db'
+revision = 'ed37f9528d53'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -38,6 +38,7 @@ def upgrade():
     op.create_table('tags',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('tag_name', sa.String(length=16), nullable=True),
+    sa.Column('post_count', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('users',
@@ -59,6 +60,10 @@ def upgrade():
     sa.Column('category_id', sa.Integer(), nullable=True),
     sa.Column('category_by_date_id', sa.Integer(), nullable=True),
     sa.Column('reading_volume', sa.Integer(), nullable=True),
+    sa.Column('description', sa.Text(), nullable=True),
+    sa.Column('body_draft', sa.Text(), nullable=True),
+    sa.Column('is_draft', sa.Boolean(), nullable=True),
+    sa.Column('image_url', sa.String(length=64), nullable=True),
     sa.ForeignKeyConstraint(['author_id'], ['users.id'], ),
     sa.ForeignKeyConstraint(['category_by_date_id'], ['category_by_date.id'], ),
     sa.ForeignKeyConstraint(['category_id'], ['categories.id'], ),

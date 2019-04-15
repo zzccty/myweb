@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
 {% block title %}CodePool - Home{% endblock %}
 {% block top_content %}
 <div class="d-flex py-2 px-2">
@@ -8,9 +9,9 @@
         <p class="text-muted mb-0 px-2" style="font-size: 0.8rem;">好好学习，天天向上。</p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb px-2" style="background-color: #fff; font-size: 0.9rem;">
-                <li class="breadcrumb-item text-muted"><a style="color: black" href="{{url_for('main.new_post')}}">微博</a></li>
-                <li class="breadcrumb-item" aria-current="page"><a style="color: black" href="{{ url_for('main.logout')}}">微信</a></li>
-                <li class="breadcrumb-item"><a style="color: black" href="{{ url_for('main.logout')}}">github</a></li>
+                <li class="breadcrumb-item text-muted"><a style="color: black" href="{{#}}">微博</a></li>
+                <li class="breadcrumb-item" aria-current="page"><a style="color: black" href="#">微信</a></li>
+                <li class="breadcrumb-item"><a style="color: black" href="#">github</a></li>
             </ol>
         </nav>
     </div>
@@ -31,6 +32,9 @@
             </div>
             {% endfor %}
             {% include '_posts.html' %}
+            <div class="my-4">
+            {{ render_pagination(pagination, align='center') }}
+            </div>
         {% endblock main_container %}
         </div>        
         <div class="col-md-3 pr-0 pl-0 pl-md-3 pt-2 pt-md-0">

@@ -3,7 +3,7 @@
     <a href="{{ url_for('main.show_post', id=post.id)}}" class="d-flex flex-row list-group-item list-group-item-action">
         <div class="d-none d-lg-inline-block">
         {% if post.description %}
-         <img src="{{ url_for('static', filename='images/author.jpg')}}" class="mr-3" alt="author" style="width:100px; height:100px;">
+         <img src="{{ post.image_url }}" class="mr-3" alt="author" style="width:100px; height:100px;">
         {% endif %}
         </div>
         <div style="width:100%;">
@@ -15,7 +15,7 @@
             <div class="container-fluid d-flex w-100 justify-content-between px-0">
                 <div>
                     {% if post.author %}
-                        <span class="iconfont icon-guanliyuanrenzheng post-icon-size align-middle"></span><button type="button" class="btn btn-warning p-0" style="line-height: 1.1;">{{ post.author.username }} {% if post.author.username == 'test' %}<span class="badge badge-success">admin</span>{% endif %}</button>
+                        <span class="iconfont icon-guanliyuanrenzheng post-icon-size align-middle"></span><button type="button" class="btn btn-warning p-0" style="line-height: 1.1;">{{ post.author.username }} {% if post.author.username == config['FLASK_ADMIN_NAME'] %}<span class="badge badge-success">admin</span>{% endif %}</button>
                     {% else %}
                     <span>作者: 未知</span>
                     {% endif %}

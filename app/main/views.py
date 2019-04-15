@@ -1,7 +1,9 @@
 from flask import render_template, flash, redirect, url_for, request, current_app
 from sqlalchemy.exc import IntegrityError
-from .forms import LoginForm, PostForm, AddCategoryForm, Rename_CategoryForm, Delete_CategoryForm
+from .forms import LoginForm, PostForm, AddCategoryForm, Rename_CategoryForm, Delete_CategoryForm, Delete_PostForm
 from flask_login import login_required, login_user, logout_user, current_user
+from werkzeug.utils import secure_filename
+import os
 from .. import db
 from ..models import User, Tag, Post, Category
 from ..utils import get_years
@@ -41,7 +43,7 @@ def logout():
 def index():
     page = request.args.get('page', 1, type=int)
     pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
-                page, current_app.config['FLASKY_POSTS_PER_PAGE'],error_out=False)
+                page, int(current_app.config['FLASKY_POSTS_PER_PAGE']), error_out=False)
     posts = pagination.items
     categories = Category.query.all()
     tags = Tag.query.all()
@@ -72,6 +74,13 @@ def new_post():
         title = form.title.data
         body = form.body.data
         description = form.description.data
+        f = form.image.data
+        filename = secure_filename(f.filename)
+        url = os.path.join(
+            current_app.root_path, 'static', 'photos', filename
+        )
+        f.save(url)
+        image_url = os.path.join('static','photos', filename)
         category = Category.query.get(form.categories.data)
         if category is not None:
             category.post_count += 1
@@ -82,13 +91,14 @@ def new_post():
             for tag in tags.split(','):
                 tag_in = Tag.query.filter_by(tag_name=tag).first() 
                 if tag_in:
+                    tag_in.post_count += 1
                     tag_list.append(tag_in)
                 else:
-                    new_tag = Tag(tag_name=tag)
+                    new_tag = Tag(tag_name=tag, post_count=1)
                     db.session.add(new_tag)
                     tag_list.append(new_tag)    
         post = Post(title=title, body=body, author=user, description=description,
-                    category=category, tags=tag_list, years=get_years())
+                    category=category, tags=tag_list, years=get_years(), image_url=image_url)
         db.session.add(post)
         try:
             db.session.commit()
@@ -99,6 +109,36 @@ def new_post():
         flash('Post created success')
         return redirect(url_for('main.show_post', id=post.id))
     return render_template('new_post.html', form=form)
+
+
+@main.route('/post/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_post(id):
+    post = Post.query.get(id)
+    if post:
+        cate = post.category
+        if cate.post_count:
+            cate.post_count -= 1
+        if cate.post_count == 0:
+            db.session.delete(cate)
+        for tag in post.tags:
+            if tag.post_count:
+                tag.post_count -= 1
+            if tag.post_count == 0:
+                db.session.delete(tag)
+        db.session.delete(post)
+        db.session.commit()
+        flash("delete post success")
+    else:
+        flash('Fail to delete post.')
+    return redirect(url_for('main.index'))
+
+
+@main.route('/post/delete1')
+@login_required
+def delete_post1():
+    posts = Post.query.order_by(Post.timestamp.desc()).all()
+    return render_template('delete_post.html', posts=posts)
 
 
 @main.route('/category/manage')

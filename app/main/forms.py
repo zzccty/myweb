@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, SubmitField, StringField, BooleanField, SelectField, TextAreaField
 from wtforms.validators import DataRequired, Email, Length, regexp
+from flask_wtf.file import FileField, FileRequired, FileAllowed
+from werkzeug.utils import secure_filename
 from flask_ckeditor import CKEditorField
 from ..models import Category
 from wtforms import ValidationError
@@ -19,6 +21,7 @@ class LoginForm(FlaskForm):
 
 class PostForm(FlaskForm):
     title = StringField('title', validators=[DataRequired(), Length(1, 64)])
+    image = FileField('image',validators=[FileRequired(), FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])
     description = TextAreaField('decription')
     body = CKEditorField('body')
     tags = StringField('tags')
@@ -44,3 +47,7 @@ class Rename_CategoryForm(FlaskForm):
 class Delete_CategoryForm(FlaskForm):
     category_name = SelectField(u'old category', coerce=int)
     submit = SubmitField('Delete')
+
+
+class Delete_PostForm(FlaskForm):
+    submit = SubmitField('delete')

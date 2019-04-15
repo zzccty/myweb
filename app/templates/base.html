@@ -11,9 +11,10 @@
     {{ bootstrap.load_css() }}
     <link rel="stylesheet" href="{{url_for('static', filename='iconfont.css')}}" type="text/css">
     <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" type="text/css">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     {% endblock %}
 
-    <title>{% block title %}Welcome to CodePool{% endblock title %}</title>
+    <title>{% block title %}CodePool{% endblock title %}</title>
     {% endblock %}
   </head>
   <body>
@@ -24,15 +25,15 @@
       <nav class="navbar sticky-top navbar-expand navbar-light justify-content-between border pr-0" style="background-color: #fff;">
           <a class="navbar-brand" href="{{ url_for('main.index')}}">CodePool</a>
           <div class="navbar-nav nav-pills">
-            <a class="nav-item nav-link" href="{{ url_for('main.index')}}">Home</a>
-            <a class="nav-item nav-link active" href="#">Features</a>
+            <a class="nav-item nav-link font-weight-bold" href="{{ url_for('main.index')}}">Home</a>
+            <a class="nav-item nav-link font-weight-bold" href="#">About</a>
           </div>
       </nav>
       {% if current_user.is_authenticated %}
       <nav aria-label="breadcrumb" style="top:2.6rem; position: sticky; z-index: 1020">
           <ol class="breadcrumb .bg-secondary">
               <li class="breadcrumb-item"><a href="{{url_for('main.new_post')}}">New</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Library</li>
+              <li class="breadcrumb-item"><a href="{{url_for('main.delete_post1')}}">delete post</a></li>
               <li class="breadcrumb-item"><a href="{{ url_for('main.manage_category')}}">manage category</a></li>
               <li class="breadcrumb-item"><a href="{{ url_for('main.logout')}}">Logout</a></li>
           </ol>
