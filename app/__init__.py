@@ -5,6 +5,7 @@ from flask_login import LoginManager
 from flask_pagedown import PageDown
 from flask_moment import Moment
 import os
+from flask_sslify import SSLify
 import logging
 from logging.handlers import RotatingFileHandler
 
@@ -15,6 +16,7 @@ from config import config
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 db = SQLAlchemy()
+sslify = SSLify()
 bootstrap = Bootstrap()
 login_manager = LoginManager()
 login_manager.login_view = 'main.login'
@@ -36,6 +38,7 @@ def create_app(config_name):
     bootstrap.init_app(app)
     moment.init_app(app)
     pagedown.init_app(app)
+    sslify.init_app(app)
 
     register_logging(app)
 
