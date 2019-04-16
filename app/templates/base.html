@@ -41,7 +41,7 @@
       {% endif %}
       {% endblock navbar %}
       {% for message in get_flashed_messages() %}
-      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <div class="alert alert-warning alert-dismissible fade show mb-0" role="alert">
           <strong>{{ message }}</strong>
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -57,6 +57,11 @@
       {{ bootstrap.load_js() }}
       {{ moment.include_moment() }}
       {{ moment.lang("zh-cn") }}
+      <script>
+        window.setTimeout(function(){
+            $('[data-dismiss="alert"]').alert('close');
+        },3000);
+      </script>
       {% endblock %}
     </div>
   </body>
