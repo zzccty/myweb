@@ -105,7 +105,7 @@ class Category(db.Model):
     @classmethod
     def add_category(cls, category_name):
         if cls.query.filter_by(category_name=category_name).first() is not None:
-            flash('This category name already exist.')
+            flash('这个分类已经存在，请重试')
             return False
         else:
             db.session.add(cls(category_name=category_name))

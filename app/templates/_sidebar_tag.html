@@ -1,5 +1,5 @@
 <div class="d-flex flex-column sidebar-attr">
-    <div class="py-2 px-4 border-bottom font-weight-bold">Tags</div>
+    <div class="py-2 px-4 border-bottom font-weight-bold">标签</div>
     <div>
     {% for tag in tags %}
     <span class="d-inline-block m-2 ml-4"><a style="color: black;" class="border-bottom border-dark" href="{{ url_for('main.get_post_by_tag', name=tag.tag_name)}}">{{ tag.tag_name }}</a></span>

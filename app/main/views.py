@@ -27,7 +27,7 @@ def login():
                 next = url_for('main.index')
             return redirect(next)
         else:
-            flash("Invalid username or password.")
+            flash("密码或用户名错误,请重试")
     return render_template('login.html', form=form)
 
 
@@ -35,7 +35,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out.')
+    flash('注销成功')
     return redirect(url_for('main.index'))
 
 
@@ -110,9 +110,9 @@ def new_post():
             db.session.commit()
         except IntegrityError:
             db.session.rollback()
-            flash('Post Failed')
+            flash('发布失败')
             return redirect(url_for('main.new_post'))
-        flash('Post created success')
+        flash('发布成功')
         return redirect(url_for('main.show_post', id=post.id))
     return render_template('new_post.html', form=form)
 
@@ -194,9 +194,9 @@ def edit_post(id):
             db.session.commit()
         except IntegrityError:
             db.session.rollback()
-            flash('Post Failed')
+            flash('发布失败')
             return redirect(url_for('main.new_post'))
-        flash('Post created success')
+        flash('发布成功')
         return redirect(url_for('main.show_post', id=post.id))
     return render_template('edit_post.html', form=form)
 
@@ -218,9 +218,9 @@ def delete_post(id):
                 db.session.delete(tag)
         db.session.delete(post)
         db.session.commit()
-        flash("delete post success")
+        flash("删除成功")
     else:
-        flash('Fail to delete post.')
+        flash('删除失败')
     return redirect(url_for('main.index'))
 
 
@@ -255,10 +255,10 @@ def delete_category():
     if delete_category_form.validate_on_submit():
         category = Category.query.get(delete_category_form.category_name.data)
         if category.delete_category():
-            flash("Delete success.")
+            flash("删除成功")
             return redirect(url_for('main.index'))
         else:
-            flash('Failed to delete category')
+            flash('删除失败')
             return redirect(url_for('main.manage_category'))
 
 
@@ -283,10 +283,10 @@ def add_category():
     if add_category_form.validate_on_submit():
         category_name = add_category_form.category_name.data
         if Category.add_category(category_name):
-            flash("Add category success.")
+            flash("分类添加成功")
             return redirect(url_for('main.index'))
         else:
-            flash('Failed to add category')
+            flash("分类添加失败")
             return redirect(url_for('main.manage_category'))
 
 
@@ -309,7 +309,6 @@ def get_post_by_tag(name):
     return render_template('index.html', posts=posts, pagination=pagination, categories=categories, tags=tags)
 
 
-@main.route('/test_login')
-@login_required
-def test_login():
-    return r'Test success!'
+@main.route('/about')
+def about():
+    return render_template('about.html')

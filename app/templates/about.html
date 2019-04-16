@@ -1,0 +1,18 @@
+{% extends 'base.html '%}
+{% block page_content %}
+
+<div class="container index-attr">
+    <div class="col-10 col-md-6 mx-auto py-5">
+        <div class="card">
+            <div class="card-header">
+            欢迎访问我的博客
+            </div>
+            <div class="card-body">
+            <h5 class="card-title">这个博客的目的</h5>
+            <p class="card-text">这个网站是我一行行代码code出来的。主要框架是flask(后端)，bootstrap(前端)。为什么轮子那么多要自己造呢？这是玄学。</p>
+            <a href="{{ url_for('main.index')}}" class="btn btn-primary">返回首页</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock page_content %}

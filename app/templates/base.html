@@ -25,21 +25,29 @@
       <nav class="navbar sticky-top navbar-expand navbar-light justify-content-between border pr-0" style="background-color: #fff;">
           <a class="navbar-brand" href="{{ url_for('main.index')}}">CodePool</a>
           <div class="navbar-nav nav-pills">
-            <a class="nav-item nav-link font-weight-bold" href="{{ url_for('main.index')}}">Home</a>
-            <a class="nav-item nav-link font-weight-bold" href="#">About</a>
+            <a class="nav-item nav-link font-weight-bold" href="{{ url_for('main.index')}}">主页</a>
+            <a class="nav-item nav-link font-weight-bold" href="{{ url_for('main.about')}}">关于</a>
           </div>
       </nav>
       {% if current_user.is_authenticated %}
       <nav aria-label="breadcrumb" style="top:2.6rem; position: sticky; z-index: 1020">
           <ol class="breadcrumb .bg-secondary">
-              <li class="breadcrumb-item"><a href="{{url_for('main.new_post')}}">New</a></li>
-              <li class="breadcrumb-item"><a href="{{url_for('main.manage_post')}}">manage post</a></li>
-              <li class="breadcrumb-item"><a href="{{ url_for('main.manage_category')}}">manage category</a></li>
-              <li class="breadcrumb-item"><a href="{{ url_for('main.logout')}}">Logout</a></li>
+              <li class="breadcrumb-item"><a href="{{url_for('main.new_post')}}">发布</a></li>
+              <li class="breadcrumb-item"><a href="{{url_for('main.manage_post')}}">文章管理</a></li>
+              <li class="breadcrumb-item"><a href="{{ url_for('main.manage_category')}}">分类管理</a></li>
+              <li class="breadcrumb-item"><a href="{{ url_for('main.logout')}}">注销</a></li>
           </ol>
       </nav>
       {% endif %}
       {% endblock navbar %}
+      {% for message in get_flashed_messages() %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>{{ message }}</strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      {% endfor %}
 
       {% block page_content %}{% endblock page_content %}
 
