@@ -18,6 +18,7 @@ flask-wtf = "*"
 flask-moment = "*"
 bootstrap-flask = "*"
 flask-pagedown = "*"
+pygments = "*"
 
 [requires]
 python_version = "3.6"

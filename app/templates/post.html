@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{url_for('static', filename='github-markdown.css')}}">
+{% endblock %}
 {% block page_content%}
 <div class="dividing_line"></div>
 <div class="container-fluid index-attr">
@@ -24,15 +28,17 @@
             <div class="row no-gutters">
                 <div class="col-6 col-md-10 mx-auto">
                     <div class="text-center mb-3">
-                        <img src="{{ url_for('static', filename='photos/') }}{{post.image_url[14:]}}" class="img-thumbnail" alt="Responsive image">
+                        <img src="{{ url_for('main.uploaded_file', filename=post.image_url[14:]) }}" class="img-thumbnail" alt="Responsive image">
                     </div>
                 </div>
             </div>
+            <article class="markdown-body">
             {% if post.body_html %}
             {{ post.body_html | safe}}
             {% else %}
             {{ post.body | safe }}
             {% endif %}
+            </article>
         </div>
         <div class="d-none d-md-block col-md-3 pr-md-0">
             {% include '_author_card.html' %}

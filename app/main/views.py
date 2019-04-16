@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request, current_app, abort
+from flask import render_template, flash, redirect, url_for, request, current_app, abort, send_from_directory
 from sqlalchemy.exc import IntegrityError
 from .forms import LoginForm, PostForm, AddCategoryForm, Rename_CategoryForm, Delete_CategoryForm, Delete_PostForm, Edit_PostForm
 from flask_login import login_required, login_user, logout_user, current_user
@@ -13,6 +13,11 @@ from . import main
 @main.before_app_request
 def before_request():
     pass
+
+@main.route('/static/photos/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(current_app.config['UPLOAD_FOLDER'],
+                               filename)
 
 
 @main.route('/login', methods=['GET', 'POST'])
@@ -85,7 +90,7 @@ def new_post():
                     current_app.root_path, 'static', 'photos', filename
                 )
                 f.save(url)
-                image_url = os.path.join('static','photos', filename)
+                image_url = filename
             else:
                 image_url = ''
             category = Category.query.get(form.categories.data)
@@ -128,12 +133,6 @@ def edit_post(id):
     if post is None:
         abort(403)
     form = Edit_PostForm()
-    form.title.data = post.title
-    form.post_description.data = post.post_description
-    if post.is_draft:
-        form.body.data = post.body_draft
-    else:
-        form.body.data = post.body
     old_cate = post.category
     old_tags = post.tags
     form.categories.choices = [(cate.id, cate.category_name) for cate in Category.query.order_by('category_name')]
@@ -149,7 +148,7 @@ def edit_post(id):
                     current_app.root_path, 'static', 'photos', filename
                 )
                 f.save(url)
-                image_url = os.path.join('static','photos', filename)
+                image_url = filename
             else:
                 image_url = ''
             category = Category.query.get(form.categories.data)
@@ -201,6 +200,13 @@ def edit_post(id):
             return redirect(url_for('main.new_post'))
         flash('发布成功')
         return redirect(url_for('main.show_post', id=post.id))
+    
+    form.title.data = post.title
+    form.post_description.data = post.post_description
+    if post.is_draft:
+        form.body.data = post.body_draft
+    else:
+        form.body.data = post.body
     return render_template('edit_post.html', form=form)
 
 

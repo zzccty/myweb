@@ -3,9 +3,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask_login import UserMixin
 from flask import flash
-from markdown import markdown
+from markdown.extensions import abbr, extra
+import markdown
 import bleach
+from .bleach_whitelist import all_styles, markdown_attrs, markdown_tags
 from . import login_manager
+
 
 
 class User(db.Model, UserMixin):
@@ -59,11 +62,8 @@ class Post(db.Model):
 
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
-        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
-                        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul', 'h1',
-                        'h2', 'h3', 'p']
-        target.body_html = bleach.linkify(bleach.clean(markdown(value, output_format='html'),
-                                          tags=allowed_tags, strip=True))
+        target.body_html = bleach.linkify(bleach.clean(markdown.markdown(value, output_format='html', extensions=['extra', 'admonition', 'codehilite', 'sane_lists', 'nl2br']),
+                                          markdown_tags, markdown_attrs, all_styles, strip=True))
 
     def __repr__(self):
         return '<Post %r>' % self.title

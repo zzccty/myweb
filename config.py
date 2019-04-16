@@ -14,6 +14,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = os.environ.get('SQLALCHEMY_TRACK_MODIFICATIONS') or False
     FLASKY_POSTS_PER_PAGE = os.environ.get('FLASKY_POSTS_PER_PAGE') or 20
     FLASK_ADMIN_NAME = os.environ.get('FLASK_ADMIN_NAME') or 'lovekernel'
+    UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER') or 'static/photos'
 
 
 
