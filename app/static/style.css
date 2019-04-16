@@ -62,6 +62,10 @@ body {
     font-size: 19px;
 }
 
+.flask-pagedown-attr {
+    height: 500px;
+}
+
 .u-list-inline {
     padding-left: 0;
     margin-bottom: 0;
