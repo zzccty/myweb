@@ -16,7 +16,6 @@ from config import config
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 db = SQLAlchemy()
-sslify = SSLify()
 bootstrap = Bootstrap()
 login_manager = LoginManager()
 login_manager.login_view = 'main.login'
@@ -38,7 +37,7 @@ def create_app(config_name):
     bootstrap.init_app(app)
     moment.init_app(app)
     pagedown.init_app(app)
-    sslify.init_app(app)
+    sslify = SSLify(app)
 
     register_logging(app)
 
