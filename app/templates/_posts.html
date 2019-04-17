@@ -3,7 +3,7 @@
     <a href="{{ url_for('main.show_post', id=post.id)}}" class="d-flex flex-row list-group-item list-group-item-action">
         <div class="d-none d-lg-inline-block">
         {% if post.post_description %}
-         <img src="{{ url_for('main.uploaded_file', filename=post.image_url }}" class="mr-3" alt="author" style="width:100px; height:100px;">
+         <img src="{{ url_for('main.uploaded_file', filename=post.image_url) }}" class="mr-3" alt="author" style="width:100px; height:100px;">
         {% endif %}
         </div>
         <div style="width:100%;">
