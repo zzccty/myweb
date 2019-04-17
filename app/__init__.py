@@ -5,7 +5,6 @@ from flask_login import LoginManager
 from flask_pagedown import PageDown
 from flask_moment import Moment
 import os
-from flask_sslify import SSLify
 import logging
 from logging.handlers import RotatingFileHandler
 
@@ -37,7 +36,6 @@ def create_app(config_name):
     bootstrap.init_app(app)
     moment.init_app(app)
     pagedown.init_app(app)
-    sslify = SSLify(app)
 
     register_logging(app)
 
