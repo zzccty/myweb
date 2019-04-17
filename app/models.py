@@ -120,7 +120,7 @@ class Link(db.Model):
 class Category_by_date(db.Model):
     __tablename__ = "category_by_date"
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.String)
+    date = db.Column(db.String(20))
     posts = db.relationship('Post', backref='years', lazy=True)
 
     def __repr__(self):
