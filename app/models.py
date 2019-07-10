@@ -10,7 +10,6 @@ from .bleach_whitelist import all_styles, markdown_attrs, markdown_tags
 from . import login_manager
 
 
-
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -25,7 +24,7 @@ class User(db.Model, UserMixin):
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')
-    
+        
     @password.setter
     def password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -112,10 +111,12 @@ class Category(db.Model):
             db.session.commit()
             return True
 
+
 class Link(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
     url = db.Column(db.String(255))
+
 
 class Category_by_date(db.Model):
     __tablename__ = "category_by_date"
@@ -125,6 +126,7 @@ class Category_by_date(db.Model):
 
     def __repr__(self):
         return '<Category by date: %r>' % self.date
+
 
 @login_manager.user_loader
 def load_user(user_id):

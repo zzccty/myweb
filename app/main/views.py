@@ -14,6 +14,7 @@ from . import main
 def before_request():
     pass
 
+
 @main.route('/static/photos/<filename>')
 def uploaded_file(filename):
     return send_from_directory(current_app.config['UPLOAD_FOLDER'],
@@ -64,12 +65,11 @@ def get_posts_by_category_name(category_name):
     category = Category.query.filter_by(category_name=category_name).first()
     if category is not None:
         pagination = category.posts.filter_by(is_draft=False).order_by(Post.timestamp.desc()).paginate(
-                page, int(current_app.config['FLASKY_POSTS_PER_PAGE']),error_out=False)
+                page, int(current_app.config['FLASKY_POSTS_PER_PAGE']), error_out=False)
         posts = pagination.items
         categories = Category.query.all()
         tags = Tag.query.all()
         return render_template('index.html', posts=posts, pagination=pagination, categories=categories, tags=tags)
-
 
 
 @main.route('/post/new', methods=['GET', 'POST'])
@@ -101,7 +101,7 @@ def new_post():
             tag_list = []
             if tags is not None:
                 for tag in tags.split(','):
-                    tag_in = Tag.query.filter_by(tag_name=tag).first() 
+                    tag_in = Tag.query.filter_by(tag_name=tag).first()
                     if tag_in:
                         tag_in.post_count += 1
                         tag_list.append(tag_in)
@@ -159,7 +159,7 @@ def edit_post(id):
             tag_list = []
             if tags is not None:
                 for tag in tags.split(','):
-                    tag_in = Tag.query.filter_by(tag_name=tag).first() 
+                    tag_in = Tag.query.filter_by(tag_name=tag).first()
                     if tag_in:
                         tag_in.post_count += 1
                         tag_list.append(tag_in)
@@ -179,7 +179,7 @@ def edit_post(id):
             if old_cate.post_count:
                 old_cate.post_count -= 1
             if old_cate.post_count == 0:
-                db.session.delete(cate)
+                db.session.delete(old_cate)
             for tag in old_tags:
                 if tag.post_count:
                     tag.post_count -= 1
@@ -250,8 +250,8 @@ def manage_category():
     rename_category_form.old_category_name.choices = choices
     delete_category_form.category_name.choices = choices
 
-    return render_template('manage_cate.html', 
-                            add_category_form=add_category_form, 
+    return render_template('manage_cate.html',
+                            add_category_form=add_category_form,
                             rename_category_form=rename_category_form,
                             delete_category_form=delete_category_form)
 
@@ -284,7 +284,6 @@ def rename_category():
     return redirect(url_for('main.manage_category'))
 
 
-
 @main.route('/category/add', methods=['POST'])
 @login_required
 def add_category():
@@ -299,7 +298,6 @@ def add_category():
             return redirect(url_for('main.manage_category'))
 
 
-
 @main.route('/post/<int:id>')
 def show_post(id):
     post = Post.query.get_or_404(id)
@@ -311,7 +309,7 @@ def get_post_by_tag(name):
     page = request.args.get('page', 1, type=int)
     tag = Tag.query.filter_by(tag_name=name).first_or_404()
     pagination = tag.posts.filter_by(is_draft=False).order_by(Post.timestamp.desc()).paginate(
-                page, int(current_app.config['FLASKY_POSTS_PER_PAGE']),error_out=False)
+                page, int(current_app.config['FLASKY_POSTS_PER_PAGE']), error_out=False)
     posts = pagination.items
     categories = Category.query.all()
     tags = Tag.query.all()
