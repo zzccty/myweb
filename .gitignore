@@ -5,6 +5,7 @@
 # C extensions
 *.so
 certs/
+static/photos
 
 # Packages
 *.egg

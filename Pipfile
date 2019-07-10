@@ -20,6 +20,7 @@ bootstrap-flask = "*"
 flask-pagedown = "*"
 pygments = "*"
 flask-sslify = "*"
+pymysql = "*"
 
 [requires]
 python_version = "3.6"
