@@ -51,4 +51,4 @@ venv
 
 # vscode configure
 .vscode
-.venv/
+.venv
