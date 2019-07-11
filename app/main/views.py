@@ -176,10 +176,8 @@ def edit_post(id):
             post.tags = tag_list
             post.years = get_years()
             image_url = image_url
-            if old_cate.post_count:
+            if old_cate and old_cate.post_count != 0:
                 old_cate.post_count -= 1
-            if old_cate.post_count == 0:
-                db.session.delete(old_cate)
             for tag in old_tags:
                 if tag.post_count:
                     tag.post_count -= 1
