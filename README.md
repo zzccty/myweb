@@ -111,7 +111,7 @@ Alternatively, run a command inside the virtualenv with pipenv run.
 **注**：`export PIPENV_VENV_IN_PROJECT=1`的作用是让pipenv在当前目录（即../myweb/）下创建`.venv`环境。  
 
 
-#### 8.这时候，这个网站需要的环境你已经搭建好了。我们先进入pipenv的`venv`中，然后设置FLASK_APP环境变量，之后再初始化数据库：  
+#### 8.这时候，这个网站需要的环境你已经搭建好了。我们先进入pipenv的`venv`中，然后设置FLASK_APP环境变量（你可以把FLASK_APP写进`.env`文件），之后再初始化数据库：  
 ```
 (web) [busui@qing myweb]$ pipenv shell
 Launching subshell in virtual environment…
@@ -169,7 +169,7 @@ FLASK_ADMIN = os.environ.get('FLASK_ADMIN') or "Lovekernel"
 
 
 
-除此之外，如果你按照上面的方法配置下来，那么你可以把环境变量统一写在`.env`文件里，我的文件内容是这样：  
+除此之外，如果你按照上面的方法配置下来，说明你也安装了`python-dotenv`， 那么你可以把环境变量统一写在`.env`文件里，我的文件内容是这样：  
 ```
 FLASK_APP=myblog.py // 这句写下之后，你就不用每次都要重新set/export FLASK_APP环境变量了
 FLASK_ENV=production
@@ -182,5 +182,5 @@ FLASKY_POSTS_PER_PAGE=10
 
 
 ## License  
-[GNU General Public License v3.0](https://github.com/Busui/myweb/blob/master/LICENSE)
+[MIT License](https://github.com/Busui/myweb/blob/master/LICENSE)
 
