@@ -133,4 +133,5 @@ Instance: /home/busui/myweb/instance
 ![](https://github.com/Busui/myweb/blob/master/READMEIMAGE/index.png)
 
 
-访问`http://127.0.0.1:5000/login`就可以登录管理员账号。正确登入之后，你会在`navbar`导航栏下看到一个简单的管理员工具。
+访问`http://127.0.0.1:5000/login`就可以登录管理员账号。正确登入之后，你会在`navbar`导航栏下看到一个简单的管理员工具:  
+![](https://github.com/Busui/myweb/blob/master/READMEIMAGE/index.gif)
