@@ -23,7 +23,7 @@
       {% block top_content %}{% endblock top_content %}
       {% block navbar %}
       <nav class="navbar sticky-top navbar-expand navbar-light justify-content-between border pr-0" style="background-color: #fff;">
-          <a class="navbar-brand" href="{{ url_for('main.index')}}">CodePool</a>
+          <a class="navbar-brand" href="{{ url_for('main.index')}}">{{ config['MYWEB_BRAND'] }}</a>
           <div class="navbar-nav nav-pills">
             <a class="nav-item nav-link font-weight-bold" href="{{ url_for('main.index')}}">主页</a>
             <a class="nav-item nav-link font-weight-bold" href="{{ url_for('main.about')}}">关于</a>

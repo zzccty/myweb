@@ -135,3 +135,33 @@ Instance: /home/busui/myweb/instance
 
 访问`http://127.0.0.1:5000/login`就可以登录管理员账号。正确登入之后，你会在`navbar`导航栏下看到一个简单的管理员工具:  
 ![](https://github.com/Busui/myweb/blob/master/READMEIMAGE/index.gif)
+
+
+## 关于配置  
+这个网站的一部分配置我已经统一放在了config.py文件：  
+```
+# 作者签名
+AUTHOR_MOTTO = os.environ.get('AUTHOR_MOTTO') or "为天地立心，为生民立命，为往圣继绝学，为万世开太平"
+# 网站brand
+MYWEB_BRAND = os.environ.get('MYWEB_BRAND') or "Codepool"
+# 站长昵称
+FLASK_ADMIN = os.environ.get('FLASK_ADMIN') or "Lovekernel"
+```
+在template文件内调用格式是：`{{ config['AUTHOR_MOTTO'] }}`(以作者签名为例子)。剩下的微博微信链接也可以用同样的办法实现。  
+
+
+
+除此之外，如果你按照上面的方法配置下来，那么你可以把环境变量统一写在`.env`文件里，我的文件内容是这样：  
+```
+FLASK_APP=myblog.py // 这句写下之后，你就不用每次都要重新set/export FLASK_APP环境变量了
+FLASK_ENV=production
+FLASK_CONFIG=development
+SECRET_KEY=换成你自己的密钥。
+SQLALCHEMY_TRACK_MODIFICATIONS=False
+FLASK_ADMIN_NAME=lovekernel
+FLASKY_POSTS_PER_PAGE=10
+```
+
+
+## License  
+

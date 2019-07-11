@@ -5,7 +5,7 @@
 <div class="d-flex py-2 px-2">
     <img src="{{ url_for('static', filename='images/author.jpg')}}" alt="author" class="img-thumbnail" style="width:80px; height:80px;">
     <div style="width:auto; height:80px;">
-        <p class="font-weight-bold px-2 mb-0" style="font-size: 1.5rem;">Lovekernel</p>
+        <p class="font-weight-bold px-2 mb-0" style="font-size: 1.5rem;">{{config['FLASK_ADMIN']}}</p>
         <p class="text-muted mb-0 px-2" style="font-size: 0.8rem;">好好学习，天天向上。</p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb px-2" style="background-color: #fff; font-size: 0.9rem;">

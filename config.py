@@ -16,6 +16,12 @@ class Config:
     FLASKY_POSTS_PER_PAGE = os.environ.get('FLASKY_POSTS_PER_PAGE') or 20
     FLASK_ADMIN_NAME = os.environ.get('FLASK_ADMIN_NAME') or 'test'
     UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER') or 'static/photos'
+    # 作者签名
+    AUTHOR_MOTTO = os.environ.get('AUTHOR_MOTTO') or "为天地立心，为生民立命，为往圣继绝学，为万世开太平"
+    # 网站brand
+    MYWEB_BRAND = os.environ.get('MYWEB_BRAND') or "Codepool"
+    # 站长昵称
+    FLASK_ADMIN = os.environ.get('FLASK_ADMIN') or "Lovekernel"
 
 
 class DevelopmentConfig(Config):
