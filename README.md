@@ -34,27 +34,27 @@
 
 当然，详细步骤也有，如下：  
 
-#### 首先你得将这个网站clone到你电脑本地，然后进入`myweb`目录下：  
+#### 1.首先你得将这个网站clone到你电脑本地，然后进入`myweb`目录下：  
 ```
 [busui@qing ~]$ git clone git@github.com:Busui/myweb.git
 [busui@qing ~]$ cd myweb/
 ```
 
 
-#### 然后，安装pipenv(关于pipenv如何使用，如果你不会，强烈安利你去学一下)：    
+#### 2.然后，安装pipenv(关于pipenv如何使用，如果你不会，强烈安利你去学一下)：    
 ```
 [busui@qing myweb]$ pip install pipenv
 ```
 
 
-#### pipenv安装完成之后，我们利用conda（集成在anaconda了）创建一个`python 3.6`版本的独立python环境，独立环境的好处是这个环境不会影响你本机其它版本的python环境，一般一个项目对应一个python环境：  
+#### 3.pipenv安装完成之后，我们利用conda（集成在anaconda了）创建一个`python 3.6`版本的独立python环境，独立环境的好处是这个环境不会影响你本机其它版本的python环境，一般一个项目对应一个python环境：  
 ```
 [busui@qing myweb]$ conda create -n "web" python=3.6
 ```
 **注意**：`-n "web"`中的"web"是你创建的python环境的名称。你可以改为你喜欢的名称。  
 
 
-#### （**这步只是说明作用，你可以不配置**）这时候你可以查看当前系统你的python环境有多少：  
+#### 4.（**这步只是说明作用，你可以不配置**）这时候你可以查看当前系统你的python环境有多少：  
 ```
 [busui@qing myweb]$ conda env list
 # conda environments:
@@ -65,14 +65,14 @@ base                  *  /opt/anaconda
 **注**：对于anaconda而言，当前系统有两个python环境。一个是“web”，一个是“base”。“web”就是我们上一步创建的python环境。而"base"是anaconda自己创建的。“base”右边的“*”星号说明当前处于“base”环境中。 
 
 
-#### 创建完python3.6版本的环境之后，我们得激活环境：  
+#### 5.创建完python3.6版本的环境之后，我们得激活环境：  
 ```
 [busui@qing myweb]$ source activate web
 (web) [busui@qing myweb]$ 
 ```
 
 
-#### 这时候你在终端输入python，就会发现python版本是3.6:  
+#### 6.这时候你在终端输入python，就会发现python版本是3.6:  
 ```
 (web) [busui@qing myweb]$ python
 Python 3.6.8 |Anaconda, Inc.| (default, Dec 30 2018, 01:22:34) 
@@ -82,7 +82,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 ```
 
 
-#### 退出python解释器之后，我们在命令行终端输入（注意，要在myweb/目录下）：  
+#### 7.退出python解释器之后，我们在命令行终端输入（注意，要在myweb/目录下）：  
 ```
 (myweb) [busui@qing myweb]$ export PIPENV_VENV_IN_PROJECT=1
 (web) [busui@qing myweb]$ pipenv install --dev
@@ -108,7 +108,7 @@ Alternatively, run a command inside the virtualenv with pipenv run.
 **注**：`export PIPENV_VENV_IN_PROJECT=1`的作用是让pipenv在当前目录（即../myweb/）下创建`.venv`环境。  
 
 
-#### 这时候，这个网站需要的环境你已经搭建好了。我们先进入pipenv的`venv`中，然后设置FLASK_APP环境变量，之后再初始化数据库：  
+#### 8.这时候，这个网站需要的环境你已经搭建好了。我们先进入pipenv的`venv`中，然后设置FLASK_APP环境变量，之后再初始化数据库：  
 ```
 (web) [busui@qing myweb]$ pipenv shell
 Launching subshell in virtual environment…
@@ -121,7 +121,7 @@ INFO  [alembic.runtime.migration] Running upgrade  -> bfd8b06a3bbf, initalized
 ```
 
 
-#### 到了这里，其实你已经可以启动网站了。但还差一个管理员账号。由于本网站没有实现注册函数，所以你只能到`flask shell`下面去注册一个用户（这里也很妙，用命令行来注册很有趣）：  
+#### 9.到了这里，其实你已经可以启动网站了。但还差一个管理员账号。由于本网站没有实现注册函数，所以你只能到`flask shell`下面去注册一个用户（这里也很妙，用命令行来注册很有趣）：  
 ```
 (myweb) [busui@qing myweb]$ flask shell
 Python 3.6.8 |Anaconda, Inc.| (default, Dec 30 2018, 01:22:34) 
@@ -134,7 +134,7 @@ Instance: /home/busui/myweb/instance
 >>> exit()
 ```
 
-到了这一步，就是往事具备，只欠东风了。在终端上输入`flask run`：  
+#### 10.到了这一步，就是往事具备，只欠东风了。在终端上输入`flask run`：  
 ```
 (myweb) [busui@qing myweb]$ flask run
  * Serving Flask app "myblog.py"
